@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>INFANITE - AI Assistant</title>
+  <style>
+    :root {
+      --primary-glow: rgba(255, 255, 255, 0.8);
+      --background-dark: radial-gradient(circle, #0a0a0a, #000000);
+      --highlight-red: #ff2c2c;
+      --matte-grey: rgba(160, 160, 160, 0.9);
+      --max-canvas-width: 600px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: var(--background-dark);
+      color: white;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      text-align: center;
+      padding: 5vw 2vw;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: clamp(30px, 6vw, 60px);
+      letter-spacing: 2px;
+      margin: 1rem 0 0.5rem;
+    }
+
+    h3 {
+      font-size: clamp(14px, 3vw, 20px);
+      text-transform: uppercase;
+      margin: 0.5rem 0;
+    }
+
+    h3 span,
+    #in,
+    #inn {
+      color: var(--highlight-red);
+      font-weight: bold;
+      text-shadow: 2px 2px 6px rgba(255, 44, 44, 0.9);
+    }
+
+    #in {
+      font-size: clamp(30px, 6vw, 60px);
+    }
+
+    #inn {
+      font-size: clamp(22px, 5vw, 40px);
+    }
+
+    h2 {
+      font-size: clamp(22px, 5vw, 40px);
+      margin: 1rem 0;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      max-width: var(--max-canvas-width);
+      height: auto;
+      margin-top: 1rem;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.95);
+      padding: clamp(10px, 2vw, 15px);
+      border-radius: 25px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      width: min(90%, 450px);
+      margin: 1rem auto;
+      transition: box-shadow 0.3s;
+    }
+
+    .search-container:hover {
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .search-container input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: clamp(8px, 2vw, 12px);
+      font-size: clamp(14px, 2.5vw, 18px);
+      border-radius: 20px;
+    }
+
+    .search-container img {
+      width: clamp(22px, 6vw, 35px);
+      height: clamp(22px, 6vw, 35px);
+      margin-left: clamp(5px, 1vw, 10px);
+      cursor: pointer;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .search-container img:hover {
+      transform: scale(1.1);
+      opacity: 0.75;
+    }
+
+    @media (max-width: 500px) {
+      h1, h2, h3 {
+        text-align: center;
+      }
+
+      .search-container {
+        flex-direction: row;
+        width: 95%;
+        padding: 8px;
+      }
+
+      .search-container input {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1><span id="in">IN</span>FANITE</h1>
+  <h3>Welcome to the <span>Future</span></h3>
+  <canvas id="infinityCanvas"></canvas>
+  <h2><span id="inn">He</span>llo, everyone</h2>
+
+  <div class="search-container">
+    <input type="text" id="search-box" placeholder="Search..." aria-label="Search by text">
+    <img src="E:/phone 45/mice.png" alt="Voice Search Icon" title="Voice Search" onclick="startVoiceSearch()">
+    <img src="E:/phone 45/cam.png" alt="Image Search Icon" title="Image Search">
+    <img src="E:/phone 45/infa.png" alt="Custom Feature Icon" title="Custom Feature">
+  </div>
+
+  <script>
+    const canvas = document.getElementById("infinityCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let angle = 0;
+    const snakeTrail = [];
+    const maxTrailLength = 100;
+    let scaleFactor = 1;
+
+    function resizeCanvas() {
+      canvas.width = Math.min(window.innerWidth * 0.9, 600);
+      canvas.height = Math.min(window.innerHeight * 0.4, 300);
+      scaleFactor = Math.min(canvas.width / 400, 1.2);
+    }
+
+    function drawInfinity() {01:19 13-04-2025
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // ♾️ Matte Grey Infinity Loop (No Glow)
+      ctx.save();
+      ctx.shadowBlur = 0;
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "rgba(160, 160, 160, 0.9)";
+      ctx.beginPath();
+
+      for (let t = 0; t < Math.PI * 2; t += 0.02) {
+        const x = 150 * scaleFactor * Math.sin(t) / (1 + Math.cos(t) ** 2) + canvas.width / 2;
+        const y = 150 * scaleFactor * Math.sin(t) * Math.cos(t) / (1 + Math.cos(t) ** 2) + canvas.height / 2;
+        t === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+
+      ctx.stroke();
+      ctx.restore();
+
+      // 🔘 White Glowing Entity Trail
+      const movingT = angle % (Math.PI * 2);
+      const movingX = 150 * scaleFactor * Math.sin(movingT) / (1 + Math.cos(movingT) ** 2) + canvas.width / 2;
+      const movingY = 150 * scaleFactor * Math.sin(movingT) * Math.cos(movingT) / (1 + Math.cos(movingT) ** 2) + canvas.height / 2;
+
+      snakeTrail.push({ x: movingX, y: movingY });
+      if (snakeTrail.length > maxTrailLength) snakeTrail.shift();
+
+      for (let i = 0; i < snakeTrail.length; i++) {
+        const opacity = (i + 1) / snakeTrail.length;
+        const gradient = ctx.createRadialGradient(
+          01:19 13-04-2025snakeTrail[i].x, snakeTrail[i].y, 0,
+          snakeTrail[i].x, snakeTrail[i].y, 6
+        );
+        gradient.addColorStop(0, `rgba(255,255,255,${opacity})`);
+        gradient.addColorStop(0.5, `rgba(255,255,255,${opacity * 0.5})`);
+        gradient.addColorStop(1, `rgba(255,255,255,0)`);
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(snakeTrail[i].x, snakeTrail[i].y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      angle += 0.012;
+      requestAnimationFrame(drawInfinity);
+    }
+
+    function startVoiceSearch() {
+      alert("Voice search feature coming soon!");
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    drawInfinity();
+  </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduHub - Learn Smarter</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<style>
+  * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+}
+
+.navbar {
+  background: #333;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.search-box {
+  flex: 1;
+  margin: 0 20px;
+  display: flex;
+  background: white;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  outline: none;
+}
+
+.search-box i {
+  background: orange;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+}
+
+.icons i {
+  margin-left: 20px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.hero {
+  background: url('https://via.placeholder.com/1200x400') center/cover no-repeat;
+  color: white;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+}
+
+.hero p {
+  margin: 10px 0;
+}
+
+.hero button {
+  padding: 10px 20px;
+  background: orange;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.categories {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  background: #fff;
+  flex-wrap: wrap;
+}
+
+.category {
+  padding: 10px 20px;
+  background: #eee;
+  border-radius: 5px;
+  margin: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.category:hover {
+  background: orange;
+  color: white;
+}
+
+.products {
+  padding: 40px 20px;
+}
+
+.products h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.product-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.product-card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.product-card img {
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+.product-card h3 {
+  margin: 10px 0;
+}
+
+.product-card button {
+  padding: 8px 15px;
+  background: orange;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #333;
+  color: white;
+  margin-top: 40px;
+}
+
+</style>
+<body>
+
+  <!-- Header -->
+  <header class="navbar">
+    <div class="logo">EduHub</div>
+    <div class="search-box">
+      <input type="text" placeholder="Search courses, topics..." />
+      <i class="fas fa-search"></i>
+    </div>
+    <div class="icons">
+      <i class="fas fa-user-graduate"></i>
+      <i class="fas fa-book"></i>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero">
+    <h1>Explore Knowledge</h1>
+    <p>Join thousands of learners & access 1000+ free courses</p>
+    <button>Start Learning</button>
+  </section>
+
+  <!-- Subject Categories -->
+  <section class="categories">
+    <div class="category">Programming</div>
+    <div class="category">Data Science</div>
+    <div class="category">Mathematics</div>
+    <div class="category">AI & ML</div>
+    <div class="category">Cyber Security</div>
+  </section>
+
+  <!-- Courses Grid -->
+  <section class="products">
+    <h2>Featured Courses</h2>
+    <div class="product-grid">
+      <div class="product-card">
+        <img src="https://source.unsplash.com/200x150/?programming" alt="Course" />
+        <h3>Mastering Python</h3>
+        <p>Free Certificate</p>
+        <button>Enroll Now</button>
+      </div>
+      <div class="product-card">
+        <img src="https://source.unsplash.com/200x150/?data,science" alt="Course" />
+        <h3>Data Science Basics</h3>
+        <p>Free Certificate</p>
+        <button>Enroll Now</button>
+      </div>
+      <div class="product-card">
+        <img src="https://source.unsplash.com/200x150/?ai,ml" alt="Course" />
+        <h3>AI & Machine Learning</h3>
+        <p>Free Certificate</p>
+        <button>Enroll Now</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 EduHub. Learn, Grow, Succeed.</p>
+  </footer>
+
+</body>
+</html>
+
+
+this is a navbar 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enhanced Navbar</title>
+  <link rel="stylesheet" href="navbar.css">
+  <!-- Optional: Font Awesome for icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<style>
+  * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f4f4;
+}
+
+.navbar {
+  width: 100%;
+  background-color: #aba7a7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  gap: 15px;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Logo */
+.nav-logo {
+  background-color: #fff;
+  width: 55px;
+  height: 55px;
+  min-width: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.nav-logo img {
+  height: 30px;
+  width: 30px;
+  object-fit: contain;
+}
+
+/* Search */
+.nav-search {
+  flex: 1;
+  display: flex;
+  min-width: 240px;
+  max-width: 700px;
+  height: 48px;
+  background: linear-gradient(145deg, #706a6a, #8e8888);
+  border-radius: 25px;
+  overflow: hidden;
+  transition: 0.3s ease;
+}
+
+.nav-search input {
+  flex: 1;
+  padding: 0 15px;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.nav-search input::placeholder {
+  color: #e0e0e0;
+}
+
+.search-icons {
+  background-color: rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 0 15px;
+}
+
+.search-icons i {
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.search-icons i:hover {
+  transform: scale(1.1);
+}
+
+/* Right box */
+.nav-box {
+  width: 150px;
+  height: 48px;
+  background: linear-gradient(145deg, #7f7f7f, #9a9a9a);
+  border-radius: 25px;
+  min-width: 100px;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav-search {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  .nav-box {
+    align-self: center;
+  }
+}
+
+</style>
+<body>
+  <div class="navbar">
+    <div class="nav-logo">
+      <img src="logo.png" alt="Logo">
+    </div>
+
+    <div class="nav-search">
+      <input type="text" placeholder="Search here what your want!?">
+      <div class="search-icons">
+        <i class="fas fa-microphone"></i>
+        <i class="fas fa-search"></i>
+      </div>
+    </div>
+
+    <div class="nav-box">
+      <!-- You can add user profile, login button etc -->
+    </div>
+  </div>
+</body>
+</html>
+
